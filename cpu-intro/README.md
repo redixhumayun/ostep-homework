@@ -249,4 +249,6 @@ Now go answer the questions at the back of the chapter to learn more, please.
 
 
 
-
+## Questions
+1. Run `process-run.py` with the flags: `-l 5:100,5:100`. What should the CPU utilization be? Why do you know this?
+It should be a 100% because the processes are both using only CPU and no I/O. I know this because I read the book
