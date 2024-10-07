@@ -252,3 +252,33 @@ Now go answer the questions at the back of the chapter to learn more, please.
 ## Questions
 1. Run `process-run.py` with the flags: `-l 5:100,5:100`. What should the CPU utilization be? Why do you know this?
 It should be a 100% because the processes are both using only CPU and no I/O. I know this because I read the book
+
+2. Run `process-run.py` with the flags: `-l 4:100,1:0`. How long does this take?
+Assuming the I/O completes, it should take 5 instruction cycles + 1 instruction to issue the IO + 1 instruction for IO done + length of io wait instructions
+
+3. Run `process-run.py` with the flags `-l 1:0,4:100` (reverse of the flags from 2). How long does it take?
+It should take 5+x(for issuing and receiving IO) instruction cycles because presumably the CPU can now parallelize the two programs. So, while process 1 is waiting for IO, process 2 can run.
+
+4. `process-run.py -l 1:0,4:100 -c -S SWITCH_ON_END`
+It should take as long as 2 because it cannot switch while IO is being performed.
+
+5. `./process-run.py -l 1:0,4:100 -c -S SWITCH_ON_IO`
+It should take as long as 3 because cpu can switch while doing IO
+
+6. `./process-run.py -l 3:0,5:100,5:100,5:100 -S SWITCH_ON_IO -c -p -I IO_RUN_LATER`. Are system resources being utilized effectively?
+p1 will issue 3 IO instructions
+p1 (issues IO)
+p2 (will run)
+p3 (will run)
+p4 (will run)
+p1 (issues IO)
+p1 (issues IO)
+No, system resources are not being utilized effectively because the process that has IO completed is just waiting before it can issue another IO request.
+
+7. `./process-run.py -l 3:0,5:100,5:100,5:100 -S SWITCH_ON_IO -c -p -I IO_RUN_IMMEDIATE`. Effective?
+Here, context will switch back as soon as IO is done.
+Yes, system resources are being utilized effectively because the process that already has CPU time-share is being allowed to complete so cost of execution switch is minimized and as soon as possible execution switches back to p1 to issue IO again.
+
+8. Now run with some randomly generated processes using flags -s 1 -l 3:50,3:50 or -s 2 -l 3:50,3:50 or -s 3 -l 3:50, 3:50. See if you can predict how the trace will turn out. What happens when you use the flag -I IO RUN IMMEDIATE versus that flag -I IO RUN LATER? What happens when you use the flag -S SWITCH ON IO versus -S SWITCH ON END?
+The thing to remember here is when execution will switch from process that issued IO and then back to process that issued IO.
+Ideally, run with `SWITCH_ON_IO` & `IO_RUN_IMMEDIATE` to make best use of system resources.
