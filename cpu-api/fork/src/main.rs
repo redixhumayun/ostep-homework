@@ -1,9 +1,5 @@
 #![allow(dead_code)]
-use std::{
-    ffi::{CStr, CString},
-    io::Write,
-    os::fd::RawFd,
-};
+use std::{ffi::CString, io::Write, os::fd::RawFd};
 
 use libc::{O_CREAT, O_TRUNC, O_WRONLY};
 
