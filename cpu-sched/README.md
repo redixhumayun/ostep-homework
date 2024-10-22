@@ -128,3 +128,108 @@ prompt> ./scheduler.py -h
 
 to get a complete list of flags and options (including options such as setting
 the time quantum for the RR scheduler).
+
+## Questions
+1. Compute the response time and turnaround time when running three jobs of length 200 with the SJF and FIFO schedulers.
+
+    Job 0(length = 200)
+    Job 1(length = 200)
+    Job 2(length = 200)
+
+    **FIFO**
+
+    [t = 0] Run job 0 for 200 seconds (DONE at t = 200)
+    [t = 200] Run job 1 for 200 seconds (DONE at t = 200)
+    [t = 400] Run job 2 for 200 seconds (DONE at t = 200)
+
+    Job 0 -> response time = 0, turnaround time = 200, wait time = 0
+
+    Job 1 -> response time = 200, turnaround time = 400, wait time = 200
+
+    Job 2 -> response time = 400, turnaround time = 600, wait time = 400
+
+    Average -> response time = 200, turnaround time = 400, wait time = 200
+
+    **SJF**
+
+    [t = 0] Run job 0 for 200 seconds (DONE at t = 200)
+    [t = 200] Run job 1 for 200 seconds (DONE at t = 200)
+    [t = 400] Run job 2 for 200 seconds (DONE at t = 200)
+
+    Job 0 -> response time = 0, turnaround time = 200, wait time = 0
+
+    Job 1 -> response time = 200, turnaround time = 400, wait time = 200
+
+    Job 2 -> response time = 400, turnaround time = 600, wait time = 400
+
+    Average -> response time = 200, turnaround time = 400, wait time = 200
+
+2. Compute the response time and turnaround time when running three jobs of length 100,200,300 with the SJF and FIFO schedulers.
+
+    Job 0(length = 100)
+    Job 1(length = 200)
+    Job 2(length = 300)
+
+    **FIFO**
+
+    [t = 0] Run job 0 for 100 seconds (DONE at t = 100)
+
+    [t = 100] Run job 1 for 200 seconds (DONE at t = 300)
+
+    [t = 300] Run job 2 for 300 seconds (DONE at t = 600)
+
+
+    Job 0 -> response time = 0, turnaround time = 100, wait time = 0
+
+    Job 1 -> response time = 100, turnaround time = 300, wait time = 100
+
+    Job 2 -> response time = 400, turnaround time = 600, wait time = 400
+
+    Average -> response time = 166.67, turnaround time = 333.33, wait time = 166.67
+
+    **SJF**
+
+    [t = 0] Run job 0 for 100 seconds (DONE at t = 100)
+
+    [t = 100] Run job 1 for 200 seconds (DONE at t = 300)
+
+    [t = 300] Run job 2 for 300 seconds (DONE at t = 600)
+
+
+    Job 0 -> response time = 0, turnaround time = 100, wait time = 0
+
+    Job 1 -> response time = 100, turnaround time = 300, wait time = 100
+
+    Job 2 -> response time = 400, turnaround time = 600, wait time = 400
+
+    Average -> response time = 166.67, turnaround time = 333.33, wait time = 166.67
+
+3. Compute the response time and turnaround time when running three jobs of length 100,200,300 with the SJF, FIFO and RR (1 second time slice) schedulers.
+
+    Not putting down the result for RR because it's too tedious but essentially it will rotate through jobs 0, 1 & 2 for one second each until all jobs are complete.
+
+    The response time will go down because each job will be scheduled quicker but the average turnaround time will go up because the turnaround time for each individual job goes up. This happens because each individual job has to wait for more iterations to complete.
+
+    For the same reason above, the wait time goes up.
+
+4. For what type of workloads does SJF deliver the same turnaround times as FIFO?
+
+    For workloads where the jobs are already arranged in ascending order of runtime. This is the heuristic SJF uses to schedule jobs anyway.
+
+5. For what types of workloads and quantum lengths does SJF deliver the same response time as RR?
+
+    The response time is the very first time a job is run. Typically, under RR this should be roughly min(quantum, first_job_len).
+
+    Under SJF, response_time_job_n = turnaround_time_job_n-1
+
+    Under RR, the response time goes up as the quantum goes up. 
+
+    Unsure about this one.
+
+6. What happens to response time with SJF as job length increases? Use simulator to demonstrate this
+
+    Take the simple case where every job is the same length, then as job length increases the response time will increase. Trivial to demonstrate via simulator, just increase job length via `./scheduler.py -p SJF -j 3 -l 100,100,100 -c` and change job length
+
+7. What happens to response time with RR as quantum length increases? Ca you write an equation to give the worst-case response time, given N jobs?
+
+    The response time increases as the quantum increases until the quantum crosses some value, maybe the average of the job length times?
